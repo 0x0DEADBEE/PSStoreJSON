@@ -38,6 +38,7 @@ with open(argv[1], "r") as ContentID:
             try:
                 # Show current Content ID
                 print(data["id"])
+
                 # Output JSON data to file
                 json_str = json.dumps(data, indent=4)
                 with open(
@@ -46,8 +47,9 @@ with open(argv[1], "r") as ContentID:
                 ) as file:
                     print("Saving..." + data["id"] + ".json")
                     file.write(json_str)
+
                 # Output icon to file(s)
-                ## Save icons linked in JSON data
+                ## Save icons extracted from JSON
                 for i in data["images"]:
                     if isinstance(i, dict):
                         for k, v in i.items():
@@ -63,6 +65,7 @@ with open(argv[1], "r") as ContentID:
                                 ) as file:
                                     print("Saving... " + str(v[58:]))
                                     file.write(response)
+
                 ## Save icon from official API /image endpoint
                 response = requests.get(url + "/image").content
                 with open(
@@ -71,12 +74,34 @@ with open(argv[1], "r") as ContentID:
                 ) as file:
                     print("Saving... " + data["id"] + ".jpg")
                     file.write(response)
+
+                ## Save promomedia extracted from JSON
+                try:
+                    for i in data['promomedia'][0]['materials'][0]['urls']:
+                        if isinstance(i, dict):
+                            for k, v in i.items():
+                                if k == 'url':
+                                    response = requests.get(v).content
+                                    with open(
+                                        npTitleID
+                                        + "/"
+                                        + entitlementID
+                                        + "/"
+                                        + str(v[49:]),
+                                        "wb",
+                                    ) as file:
+                                        print("Saving... " + str(v[49:]))
+                                        file.write(response)
+                except:
+                    pass                           
+
                 ##PLACEHOLDER for 'https://image.api.playstation.com/cdn'
+
+
             except:
                 os.rmdir(npTitleID + "/" + entitlementID)
                 print("Invalid entitlement ID:" + str(entitlementID))
                 with open(npTitleID + "/" + "errlog.log", "a") as file:
                     file.write(entitlementID + " | INVALID\n")
                 file.close()
-    ContentID.close()
-quit()
+
