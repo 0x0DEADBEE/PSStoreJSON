@@ -10,11 +10,12 @@ language = argv[3]
 serviceIDPrefix = argv[4]
 npTitleID = str(argv[5] + "_00")
 
-# Retrieve ContentID from '*.dlc' files
+# Retrieve ContentID by iterating the '*.dlc' files
 with open(argv[1], "r") as ContentID:
     for line in ContentID:
         if "ContentID" in line:
             entitlementID = str(line[13:][:16])
+            
             # Create folder for files to be saved to
             os.makedirs(str(npTitleID) + "/" + str(entitlementID), exist_ok=True)
             url = (
