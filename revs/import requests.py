@@ -11,9 +11,9 @@ for i in data['images']:
         for k, v in i.items():
             if k == 'url':
                 print(v)
-                response = requests.get(v)
+                response = requests.get(v).content
                 with open(str(v[58:]), "wb") as file:
-                    shutil.copyfileobj(response.raw, file)
+                    shutil.copyfileobj(response, file)
                     print(v)
                 del response
 
