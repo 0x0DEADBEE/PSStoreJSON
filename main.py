@@ -1,7 +1,6 @@
 from sys import argv
 import requests
 import json
-import shutil
 import os
 
 # Set API search parameters
