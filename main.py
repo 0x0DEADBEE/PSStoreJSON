@@ -9,54 +9,74 @@ server = "https://store.playstation.com/store/api"
 country = argv[2]
 language = argv[3]
 serviceIDPrefix = argv[4]
-npTitleID = str(argv[5]+"_00")
-
-#Creates folder to save files to
-os.makedirs(npTitleID, exist_ok=True)
+npTitleID = str(argv[5] + "_00")
 
 # Retrieve ContentID from '*.dlc' files
 with open(argv[1], "r") as ContentID:
-    while True:
-        for line in ContentID:
-            if "ContentID" in line:
-                entitlementID = str(line[13:][:16])
-
-                url = (
-                    server
-                    + "/chihiro/00_09_000/container/"
-                    + country
-                    + "/"
-                    + language
-                    +"/999/"
-                    + serviceIDPrefix
-                    + "-"
-                    + npTitleID
-                    + "-"
-                    + entitlementID
-                )
-
-                # Request data from API
-                response = requests.get(url)
-                data = response.json()
-
-                # Save the data requested from API
-                try:
-                    # Show current Content ID (format: Service ID[hyphen]NP Title ID (format: XXXXYYYYY_00)[hyphen]Entitlement label) 
-                    print(data["id"])
-
-                    # Output JSON data to file
-                    json_str = json.dumps(data, indent=4)
-                    with open(str(str(npTitleID)+"/"+str(data["id"])) + ".json", "w") as file:
-                        file.write(json_str)
-
-                    # Request and output icon to file
-                    response = requests.get(url+"/image", stream=True)
-                    with open(str(str(npTitleID)+"/"+str(data["id"])) + ".jpg", "wb") as file:
-                        shutil.copyfileobj(response.raw, file)
-                    del response 
-                except:
-                    print("Invalid entitlement ID:" + str(entitlementID))
-                    with open(npTitleID+"/"+"errlog.log", "a")  as file:
-                        file.write(entitlementID+" | INVALID\n")
-                    file.close()
+    for line in ContentID:
+        if "ContentID" in line:
+            entitlementID = str(line[13:][:16])
+            # Create folder for files to be saved to
+            os.makedirs(str(npTitleID) + "/" + str(entitlementID), exist_ok=True)
+            url = (
+                server
+                + "/chihiro/00_09_000/container/"
+                + country
+                + "/"
+                + language
+                + "/999/"
+                + serviceIDPrefix
+                + "-"
+                + npTitleID
+                + "-"
+                + entitlementID
+            )
+            # Request data from API
+            response = requests.get(url)
+            data = response.json()
+            # Save the data requested from API
+            try:
+                # Show current Content ID
+                print(data["id"])
+                # Output JSON data to file
+                json_str = json.dumps(data, indent=4)
+                with open(
+                    npTitleID + "/" + entitlementID + "/" + data["id"] + ".json",
+                    "w",
+                ) as file:
+                    print("Saving..." + data["id"] + ".json")
+                    file.write(json_str)
+                # Output icon to file(s)
+                ## Save icons linked in JSON data
+                for i in data["images"]:
+                    if isinstance(i, dict):
+                        for k, v in i.items():
+                            if k == "url":
+                                response = requests.get(v).content
+                                with open(
+                                    npTitleID
+                                    + "/"
+                                    + entitlementID
+                                    + "/"
+                                    + str(v[58:]),
+                                    "wb",
+                                ) as file:
+                                    print("Saving... " + str(v[58:]))
+                                    file.write(response)
+                ## Save icon from official API /image endpoint
+                response = requests.get(url + "/image").content
+                with open(
+                    npTitleID + "/" + entitlementID + "/" + data["id"] + ".jpg",
+                    "wb",
+                ) as file:
+                    print("Saving... " + data["id"] + ".jpg")
+                    file.write(response)
+                ##PLACEHOLDER for 'https://image.api.playstation.com/cdn'
+            except:
+                os.rmdir(npTitleID + "/" + entitlementID)
+                print("Invalid entitlement ID:" + str(entitlementID))
+                with open(npTitleID + "/" + "errlog.log", "a") as file:
+                    file.write(entitlementID + " | INVALID\n")
+                file.close()
     ContentID.close()
+quit()
