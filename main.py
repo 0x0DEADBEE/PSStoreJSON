@@ -37,7 +37,7 @@ with open(argv[1], "r") as ContentID:
             # Save the data requested from API
             try:
                 # Show current Content ID
-                print(data["id"])
+                print("\n" + data["id"] + " | " + data["name"])
 
                 # Output JSON data to file
                 json_str = json.dumps(data, indent=4)
@@ -45,7 +45,7 @@ with open(argv[1], "r") as ContentID:
                     npTitleID + "/" + entitlementID + "/" + data["id"] + ".json",
                     "w",
                 ) as file:
-                    print("Saving..." + data["id"] + ".json")
+                    print("Saving... " + data["id"] + ".json")
                     file.write(json_str)
 
                 # Output icon to file(s)
