@@ -2,6 +2,7 @@ from sys import argv
 import requests
 import json
 import os
+import re
 
 # Set API search parameters
 server = "https://store.playstation.com/store/api"
@@ -13,9 +14,10 @@ npTitleID = str(argv[5] + "_00")
 # Retrieve ContentID by iterating the '*.dlc' files
 with open(argv[1], "r") as ContentID:
     for line in ContentID:
-        if "ContentID" in line:
-            entitlementID = str(line[13:][:16])
-            
+        match = re.search(r'(?:ContentID|InGameCommerceID)\s*"(\w+)"', line)
+        if match:
+            entitlementID = match.group(1)
+
             # Create folder for files to be saved to
             os.makedirs(str(npTitleID) + "/" + str(entitlementID), exist_ok=True)
             url = (
@@ -34,10 +36,11 @@ with open(argv[1], "r") as ContentID:
             # Request data from API
             response = requests.get(url)
             data = response.json()
+
             # Save the data requested from API
             try:
                 # Show current Content ID
-                print("\n" + data["id"] + " | " + data["name"])
+                print(data["id"] + " | " + data["name"])
 
                 # Output JSON data to file
                 json_str = json.dumps(data, indent=4)
@@ -56,11 +59,7 @@ with open(argv[1], "r") as ContentID:
                             if k == "url":
                                 response = requests.get(v).content
                                 with open(
-                                    npTitleID
-                                    + "/"
-                                    + entitlementID
-                                    + "/"
-                                    + str(v[58:]),
+                                    npTitleID + "/" + entitlementID + "/" + str(v[58:]),
                                     "wb",
                                 ) as file:
                                     print("Saving... " + str(v[58:]))
@@ -77,10 +76,10 @@ with open(argv[1], "r") as ContentID:
 
                 ## Save promomedia extracted from JSON
                 try:
-                    for i in data['promomedia'][0]['materials'][0]['urls']:
+                    for i in data["promomedia"][0]["materials"][0]["urls"]:
                         if isinstance(i, dict):
                             for k, v in i.items():
-                                if k == 'url':
+                                if k == "url":
                                     response = requests.get(v).content
                                     with open(
                                         npTitleID
@@ -93,15 +92,11 @@ with open(argv[1], "r") as ContentID:
                                         print("Saving... " + str(v[49:]))
                                         file.write(response)
                 except:
-                    pass                           
-
-                ##PLACEHOLDER for 'https://image.api.playstation.com/cdn'
-
+                    pass
+                print("\n", end="")
 
             except:
                 os.rmdir(npTitleID + "/" + entitlementID)
-                print("Invalid entitlement ID:" + str(entitlementID))
                 with open(npTitleID + "/" + "errlog.log", "a") as file:
                     file.write(entitlementID + " | INVALID\n")
                 file.close()
-
