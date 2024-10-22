@@ -6,3 +6,4 @@ PSStoreJSON is a utility for collecting LittleBigPlanet™ downloadable content 
 ## To-Do List
 - [ ] Add "InGameCommerceID" support (partially complete)
 - [ ] Test with LittleBigPlanet™ PS Vita™ releases DLC file
+- [ ] Add SerialStation CSV support
