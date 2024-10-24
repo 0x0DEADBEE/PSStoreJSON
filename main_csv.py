@@ -38,7 +38,7 @@ with open("lbp.csv", "r") as file:
 
         # Create folder for files to be saved to
         os.makedirs(
-            "downloads" + str(npTitleID) + "/" + str(entitlementID), exist_ok=True
+            "downloads/" + str(npTitleID) + "/" + str(entitlementID), exist_ok=True
         )
 
         # Request data from API
@@ -53,7 +53,7 @@ with open("lbp.csv", "r") as file:
             # Output JSON data to file
             json_str = json.dumps(data, indent=4)
             with open(
-                "downloads"
+                "downloads/"
                 + npTitleID
                 + "/"
                 + entitlementID
@@ -73,7 +73,7 @@ with open("lbp.csv", "r") as file:
                         if k == "url":
                             response = requests.get(v).content
                             with open(
-                                "downloads"
+                                "downloads/"
                                 + npTitleID
                                 + "/"
                                 + entitlementID
@@ -87,7 +87,7 @@ with open("lbp.csv", "r") as file:
             ## Save icon from official API /image endpoint
             response = requests.get(url + "/image").content
             with open(
-                "downloads"
+                "downloads/"
                 + npTitleID
                 + "/"
                 + entitlementID
@@ -107,7 +107,7 @@ with open("lbp.csv", "r") as file:
                             if k == "url":
                                 response = requests.get(v).content
                                 with open(
-                                    "downloads"
+                                    "downloads/"
                                     + npTitleID
                                     + "/"
                                     + entitlementID
@@ -123,7 +123,7 @@ with open("lbp.csv", "r") as file:
             print("\n", end="")
 
         except:
-            os.rmdir("downloads" + npTitleID + "/" + entitlementID)
-            with open("downloads" + npTitleID + "/" + "errlog.log", "a") as file:
+            os.rmdir("downloads/" + npTitleID + "/" + entitlementID)
+            with open("downloads/" + npTitleID + "/" + "errlog.log", "a") as file:
                 file.write(url)
             file.close()
