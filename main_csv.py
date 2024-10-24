@@ -8,6 +8,7 @@ country = ""
 
 with open("lbp.csv", "r") as file:
     csvFile = csv.reader(file)
+    next(csvFile)
     for entries in csvFile:
         contentID = entries[1]
         serviceIDPrefix = contentID[0:6]
@@ -31,7 +32,7 @@ with open("lbp.csv", "r") as file:
             + country
             + "/"
             + language
-            + "/"
+            + "/999/"
             + contentID
         )
 
@@ -40,7 +41,6 @@ with open("lbp.csv", "r") as file:
 
         # Request data from API
         response = requests.get(url)
-        print(url)
         data = response.json()
 
         # Save the data requested from API
