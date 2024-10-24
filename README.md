@@ -18,7 +18,7 @@ or
 `python main.py "downloadables.dlc" gb en EP9000 BCES00141`
 
 ### CSV Usage
-`python main.py`
+`python main_csv.py`
 
 ##
 
