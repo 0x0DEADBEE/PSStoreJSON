@@ -19,7 +19,9 @@ with open(argv[1], "r") as ContentID:
             entitlementID = match.group(1)
 
             # Create folder for files to be saved to
-            os.makedirs(str(npTitleID) + "/" + str(entitlementID), exist_ok=True)
+            os.makedirs(
+                "downloads" + str(npTitleID) + "/" + str(entitlementID), exist_ok=True
+            )
             url = (
                 server
                 + "/chihiro/00_09_000/container/"
@@ -45,7 +47,13 @@ with open(argv[1], "r") as ContentID:
                 # Output JSON data to file
                 json_str = json.dumps(data, indent=4)
                 with open(
-                    npTitleID + "/" + entitlementID + "/" + data["id"] + ".json",
+                    "downloads"
+                    + npTitleID
+                    + "/"
+                    + entitlementID
+                    + "/"
+                    + data["id"]
+                    + ".json",
                     "w",
                 ) as file:
                     print("Saving... " + data["id"] + ".json")
@@ -59,7 +67,12 @@ with open(argv[1], "r") as ContentID:
                             if k == "url":
                                 response = requests.get(v).content
                                 with open(
-                                    npTitleID + "/" + entitlementID + "/" + str(v[58:]),
+                                    "downloads"
+                                    + npTitleID
+                                    + "/"
+                                    + entitlementID
+                                    + "/"
+                                    + str(v[58:]),
                                     "wb",
                                 ) as file:
                                     print("Saving... " + str(v[58:]))
@@ -68,7 +81,13 @@ with open(argv[1], "r") as ContentID:
                 ## Save icon from official API /image endpoint
                 response = requests.get(url + "/image").content
                 with open(
-                    npTitleID + "/" + entitlementID + "/" + data["id"] + ".jpg",
+                    "downloads"
+                    + npTitleID
+                    + "/"
+                    + entitlementID
+                    + "/"
+                    + data["id"]
+                    + ".jpg",
                     "wb",
                 ) as file:
                     print("Saving... " + data["id"] + ".jpg")
@@ -82,7 +101,8 @@ with open(argv[1], "r") as ContentID:
                                 if k == "url":
                                     response = requests.get(v).content
                                     with open(
-                                        npTitleID
+                                        "downloads"
+                                        + npTitleID
                                         + "/"
                                         + entitlementID
                                         + "/"
@@ -96,7 +116,7 @@ with open(argv[1], "r") as ContentID:
                 print("\n", end="")
 
             except:
-                os.rmdir(npTitleID + "/" + entitlementID)
-                with open(npTitleID + "/" + "errlog.log", "a") as file:
+                os.rmdir("downloads" + npTitleID + "/" + entitlementID)
+                with open("downloads" + npTitleID + "/" + "errlog.log", "a") as file:
                     file.write(entitlementID + " | INVALID\n")
                 file.close()
