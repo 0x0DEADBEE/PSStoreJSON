@@ -37,7 +37,9 @@ with open("lbp.csv", "r") as file:
         )
 
         # Create folder for files to be saved to
-        os.makedirs(str(npTitleID) + "/" + str(entitlementID), exist_ok=True)
+        os.makedirs(
+            "downloads" + str(npTitleID) + "/" + str(entitlementID), exist_ok=True
+        )
 
         # Request data from API
         response = requests.get(url)
@@ -51,7 +53,13 @@ with open("lbp.csv", "r") as file:
             # Output JSON data to file
             json_str = json.dumps(data, indent=4)
             with open(
-                npTitleID + "/" + entitlementID + "/" + data["id"] + ".json",
+                "downloads"
+                + npTitleID
+                + "/"
+                + entitlementID
+                + "/"
+                + data["id"]
+                + ".json",
                 "w",
             ) as file:
                 print("Saving... " + data["id"] + ".json")
@@ -65,7 +73,12 @@ with open("lbp.csv", "r") as file:
                         if k == "url":
                             response = requests.get(v).content
                             with open(
-                                npTitleID + "/" + entitlementID + "/" + str(v[58:]),
+                                "downloads"
+                                + npTitleID
+                                + "/"
+                                + entitlementID
+                                + "/"
+                                + str(v[58:]),
                                 "wb",
                             ) as file:
                                 print("Saving... " + str(v[58:]))
@@ -74,7 +87,13 @@ with open("lbp.csv", "r") as file:
             ## Save icon from official API /image endpoint
             response = requests.get(url + "/image").content
             with open(
-                npTitleID + "/" + entitlementID + "/" + data["id"] + ".jpg",
+                "downloads"
+                + npTitleID
+                + "/"
+                + entitlementID
+                + "/"
+                + data["id"]
+                + ".jpg",
                 "wb",
             ) as file:
                 print("Saving... " + data["id"] + ".jpg")
@@ -88,7 +107,12 @@ with open("lbp.csv", "r") as file:
                             if k == "url":
                                 response = requests.get(v).content
                                 with open(
-                                    npTitleID + "/" + entitlementID + "/" + str(v[49:]),
+                                    "downloads"
+                                    + npTitleID
+                                    + "/"
+                                    + entitlementID
+                                    + "/"
+                                    + str(v[49:]),
                                     "wb",
                                 ) as file:
                                     print("Saving... " + str(v[49:]))
@@ -99,7 +123,7 @@ with open("lbp.csv", "r") as file:
             print("\n", end="")
 
         except:
-            os.rmdir(npTitleID + "/" + entitlementID)
-            with open(npTitleID + "/" + "errlog.log", "a") as file:
-                file.write(entitlementID + " | INVALID\n")
+            os.rmdir("downloads" + npTitleID + "/" + entitlementID)
+            with open("downloads" + npTitleID + "/" + "errlog.log", "a") as file:
+                file.write(url)
             file.close()
