@@ -1,5 +1,7 @@
 # PSStoreJSON
 
+## This project has been archived as it can no longer fulfill the purpose it was created for due to the LittleBigPlanet content becoming inaccessible following their delisting on 31st of October, 2024.
+
 ## Description
 PSStoreJSON is a utility for collecting LittleBigPlanet™ downloadable content metadata from Playstation®Store content using the **ContentID** section from the native downloadable content locking format (a.k.a. `*.dlc`). The script uses undocumented API endpoints to collect the data.
 
