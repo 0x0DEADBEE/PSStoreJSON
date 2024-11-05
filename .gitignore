@@ -1,4 +1,2 @@
-downloadables.dlc
-images_test.py
-csv.py
-test1.py
+downloads/
+tests/
